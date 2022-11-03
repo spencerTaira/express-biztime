@@ -1,3 +1,4 @@
+"use strict"
 /** BizTime express application. */
 
 const express = require("express");
