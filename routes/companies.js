@@ -1,4 +1,4 @@
-"user strict";
+"use strict";
 
 const express = require("express");
 const router = new express.Router();
@@ -17,8 +17,10 @@ router.get('/', async function (req, res) {
   const result = await db.query(
     `SELECT code, name
       FROM companies
+      ORDER BY name
     `
   );
+
   const companies = result.rows;
   return res.json({ companies });
 });
@@ -32,6 +34,7 @@ router.get('/', async function (req, res) {
 
 router.get('/:code', async function (req, res) {
   const code = req.params.code;
+
   const result = await db.query(
     `SELECT code, name, description
       FROM companies
@@ -112,7 +115,7 @@ router.delete('/:code', async function (req, res) {
     RETURNING code, name, description`,
     [code]
   );
-    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",result)
+
   if (!result.rows[0]) {
     throw new NotFoundError(`Not found: ${code}`);
   }
