@@ -1,5 +1,6 @@
 "use strict";
 const express = require("express");
+const { DatabaseError } = require("pg");
 const router = new express.Router();
 const db = require("../db");
 const { NotFoundError, BadRequestError } = require("../expressError");
@@ -97,8 +98,10 @@ router.post('/', async function (req, res) {
     const invoice = result.rows[0];
     return res.json({ invoice });
   } catch (error) {
-    console.log(error)
-    throw new NotFoundError(error.detail) // not found error
+    if (error instanceof DatabaseError){
+      throw new BadRequestError(error.detail)
+    }
+    throw error;
   }
 });
 
