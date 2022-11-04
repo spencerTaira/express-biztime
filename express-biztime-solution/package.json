@@ -1,0 +1,21 @@
+{
+  "name": "biztime",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Joel Burton",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.0.0-alpha.8",
+    "pg": "*",
+    "slugify": "*"
+  },
+  "devDependencies": {
+    "jest": "^26.6.3",
+    "supertest": "^6.1.3"
+  }
+}
