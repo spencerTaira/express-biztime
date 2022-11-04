@@ -26,25 +26,36 @@ router.get('/', async function (req, res) {
 });
 
 /**
- * Queries database for company matching query string and returns JSON object like
+ * Queries database for company and all of its invoices
+ * matching query string and returns JSON object like
  * { company:
- *     {code, name, description}
- * }
+ *     {code, name, description,
+ *      invoices: [id,......]}}
  */
 
 router.get('/:code', async function (req, res) {
   const code = req.params.code;
 
-  const result = await db.query(
+  const cResult = await db.query(
     `SELECT code, name, description
       FROM companies
       WHERE code = $1
     `, [code]
   );
 
-  if (result.rows.length === 0) throw new NotFoundError('Company does not exist');
+  const company = cResult.rows[0];
+  if (!company) throw new NotFoundError('Company does not exist');
 
-  const company = result.rows[0];
+  const iResults = await db.query(
+    `
+    SELECT id, amt, paid, add_date, paid_date
+      FROM invoices
+        JOIN companies ON comp_code = code
+      WHERE code = $1
+    `, [code]
+  );
+
+  company.invoices = iResults.rows;
   return res.json({ company });
 });
 
